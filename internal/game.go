@@ -42,19 +42,32 @@ func (g *game) RegisterPlayer() error {
 
 func (g *game) HandleMovement(iSquare, tSquare entity.Square, action entity.Action, result entity.Result) {
 	movement := entity.NewMovement(iSquare, tSquare, action, result)
-	g.move(movement)
+
+	if movement.Action == entity.Move {
+		g.handleMove(movement)
+	}
 }
 
-func (g *game) move(m entity.Movement) {
+func (g *game) handleMove(m entity.Movement) {
+	tSquare := g.GetSquare(m.TargetY(), m.TargetX())
+	tSquare.SetPiece(m.GetPiece())
 
-}
+	g.setSquare(m.TargetY(), m.TargetX(), tSquare)
 
-func (g *game) handlePawnMovement(m entity.Movement) {
+	iSquare := g.GetSquare(m.InitialY(), m.InitialX())
 
+	emptyPiece := entity.NewEmptyPiece()
+	iSquare.SetPiece(&emptyPiece)
+
+	g.setSquare(m.InitialY(), m.InitialX(), iSquare)
 }
 
 func (g *game) GetSquare(y, x int) entity.Square {
 	return g.board[y][x]
+}
+
+func (g *game) setSquare(y, x int, square entity.Square) {
+	g.board[y][x] = square
 }
 
 func (g *game) ParseAction(action string) entity.Action {

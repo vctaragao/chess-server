@@ -5,15 +5,15 @@ type (
 	Result int
 
 	Movement struct {
-		initialSquare Square
-		targetSquare  Square
-		action        Action
-		result        Result
+		InitialSquare Square
+		TargetSquare  Square
+		Action        Action
+		Result        Result
 	}
 )
 
 const (
-	Default Action = iota
+	Move Action = iota
 	Capture
 
 	Empty Result = iota
@@ -23,10 +23,10 @@ const (
 
 func NewMovement(initialSquare, targetSquare Square, action Action, result Result) Movement {
 	return Movement{
-		initialSquare: initialSquare,
-		targetSquare:  targetSquare,
-		action:        action,
-		result:        result,
+		InitialSquare: initialSquare,
+		TargetSquare:  targetSquare,
+		Action:        action,
+		Result:        result,
 	}
 }
 
@@ -35,7 +35,7 @@ func NewActionFromString(action string) Action {
 		return Capture
 	}
 
-	return Default
+	return Move
 }
 
 func NewResultFromString(result string) Result {
@@ -50,13 +50,21 @@ func NewResultFromString(result string) Result {
 }
 
 func (m *Movement) TargetY() int {
-	return m.targetSquare.y
+	return m.TargetSquare.y
 }
 
 func (m *Movement) TargetX() int {
-	return m.targetSquare.x
+	return m.TargetSquare.x
+}
+
+func (m *Movement) InitialY() int {
+	return m.InitialSquare.y
+}
+
+func (m *Movement) InitialX() int {
+	return m.InitialSquare.x
 }
 
 func (m *Movement) GetPiece() *Piece {
-	return m.initialSquare.piece
+	return m.InitialSquare.piece
 }

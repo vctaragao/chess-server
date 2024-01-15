@@ -48,6 +48,20 @@ func main() {
 	game.HandleMovement(iSquare, tSquare, action, result)
 
 	game.Render()
+
+	if err := json.Unmarshal(bPlayerMove(), &movRequest); err != nil {
+		log.Fatal("unable to unmarshal movement request", err)
+	}
+
+	action = game.ParseAction(movRequest.Action)
+	result = game.ParseResult(movRequest.Result)
+
+	iSquare = game.GetSquare(movRequest.InitialPosition.Y, movRequest.InitialPosition.X)
+	tSquare = game.GetSquare(movRequest.TargetPosition.Y, movRequest.TargetPosition.X)
+
+	game.HandleMovement(iSquare, tSquare, action, result)
+
+	game.Render()
 }
 
 func wPlayerMove() []byte {
@@ -56,11 +70,25 @@ func wPlayerMove() []byte {
             "x": 6,
             "y": 7
         },
-        "target_pos"{
+        "target_pos": {
             "x": 5,
             "y": 5
         },
         "result": "check",
-        "action": "capture"
+        "action": "move"
+    }`)
+}
+
+func bPlayerMove() []byte {
+	return []byte(`{
+        "initial_pos": {
+            "x": 4,
+            "y": 1
+        },
+        "target_pos": {
+            "x": 4,
+            "y": 3
+        },
+        "action": "move"
     }`)
 }
