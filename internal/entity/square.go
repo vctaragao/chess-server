@@ -6,12 +6,12 @@ type Square struct {
 	piece *Piece
 }
 
-func NewSquare(y, x int) Square {
-	return Square{
+func NewSquare(y, x int) *Square {
+	return &Square{
 		empty: true,
 		Position: Position{
-			x: x,
-			y: y,
+			X: x,
+			Y: y,
 		},
 	}
 }
@@ -23,4 +23,12 @@ func (s *Square) SetPiece(piece *Piece) {
 	}
 
 	s.piece = piece
+}
+
+func (s *Square) IsEmpty() bool {
+	return s.empty
+}
+
+func (s *Square) GetPiece() *Piece {
+	return s.piece
 }

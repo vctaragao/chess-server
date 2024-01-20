@@ -9,11 +9,11 @@ import (
 func TestRegisterPlayer(t *testing.T) {
 	game := NewGame()
 
-	err := game.RegisterPlayer()
+	err := game.RegisterPlayer("victor")
 	assert.NoError(t, err)
 	assert.NotNil(t, game.wPlayer)
 
-	err = game.RegisterPlayer()
+	err = game.RegisterPlayer("test")
 	assert.NoError(t, err)
 	assert.NotNil(t, game.bPlayer)
 }
@@ -21,14 +21,14 @@ func TestRegisterPlayer(t *testing.T) {
 func TestRegisterPlayerError(t *testing.T) {
 	game := NewGame()
 
-	err := game.RegisterPlayer()
+	err := game.RegisterPlayer("victor")
 	assert.NoError(t, err)
 	assert.NotNil(t, game.wPlayer)
 
-	err = game.RegisterPlayer()
+	err = game.RegisterPlayer("pedro")
 	assert.NoError(t, err)
 	assert.NotNil(t, game.bPlayer)
 
-	err = game.RegisterPlayer()
+	err = game.RegisterPlayer("victor")
 	assert.EqualError(t, err, ErrMaxPlayer.Error())
 }

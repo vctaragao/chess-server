@@ -5,7 +5,7 @@ import (
 	"slices"
 )
 
-type Board [8][8]Square
+type Board [8][8]*Square
 
 func NewBoard() Board {
 	return initializeBoard()
@@ -64,10 +64,10 @@ func colorByLine(y int) Color {
 	return color
 }
 
-func (b *Board) insert(y, x int, square Square, piece Piece) {
+func (b *Board) insert(y, x int, square *Square, piece *Piece) {
 	if !piece.isNull {
-		square.SetPiece(&piece)
-		piece.SetSquare(&square)
+		square.SetPiece(piece)
+		piece.SetSquare(square)
 	}
 
 	b[y][x] = square

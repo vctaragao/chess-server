@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/vctaragao/chess-server/internal"
@@ -24,62 +25,69 @@ type (
 func main() {
 	game := internal.NewGame()
 
-	if err := game.RegisterPlayer(); err != nil {
+	if err := game.RegisterPlayer("Victor"); err != nil {
 		log.Fatal("unable to register first player", err)
 	}
 
-	if err := game.RegisterPlayer(); err != nil {
+	if err := game.RegisterPlayer("Pedro"); err != nil {
 		log.Fatal("unable to register second player", err)
 	}
 
 	game.Render()
+	fmt.Println()
 
+	parseAndMove(game, wFirstPawnMove())
+	parseAndMove(game, bFirstMove())
+
+	parseAndMove(game, wSecondPawnMove())
+	parseAndMove(game, bSecondMove())
+}
+
+func parseAndMove(game *internal.Game, movement []byte) {
 	var movRequest MovementRequest
-	if err := json.Unmarshal(wPlayerMove(), &movRequest); err != nil {
+	if err := json.Unmarshal(movement, &movRequest); err != nil {
 		log.Fatal("unable to unmarshal movement request", err)
 	}
-
-	action := game.ParseAction(movRequest.Action)
-	result := game.ParseResult(movRequest.Result)
 
 	iSquare := game.GetSquare(movRequest.InitialPosition.Y, movRequest.InitialPosition.X)
 	tSquare := game.GetSquare(movRequest.TargetPosition.Y, movRequest.TargetPosition.X)
 
-	game.HandleMovement(iSquare, tSquare, action, result)
-
-	game.Render()
-
-	if err := json.Unmarshal(bPlayerMove(), &movRequest); err != nil {
-		log.Fatal("unable to unmarshal movement request", err)
+	m := game.NewMovement(iSquare, tSquare)
+	if err := game.HandleMovement(m); err != nil {
+		log.Println(err, m)
 	}
 
-	action = game.ParseAction(movRequest.Action)
-	result = game.ParseResult(movRequest.Result)
-
-	iSquare = game.GetSquare(movRequest.InitialPosition.Y, movRequest.InitialPosition.X)
-	tSquare = game.GetSquare(movRequest.TargetPosition.Y, movRequest.TargetPosition.X)
-
-	game.HandleMovement(iSquare, tSquare, action, result)
-
 	game.Render()
+	fmt.Println()
 }
 
-func wPlayerMove() []byte {
+func wFirstPawnMove() []byte {
 	return []byte(`{
         "initial_pos": {
-            "x": 6,
-            "y": 7
+            "x": 5,
+            "y": 6
         },
         "target_pos": {
             "x": 5,
             "y": 5
-        },
-        "result": "check",
-        "action": "move"
+        }
     }`)
 }
 
-func bPlayerMove() []byte {
+func wSecondPawnMove() []byte {
+	return []byte(`{
+        "initial_pos": {
+            "x": 6,
+            "y": 6
+        },
+        "target_pos": {
+            "x": 6,
+            "y": 4
+        }
+    }`)
+}
+
+func bFirstMove() []byte {
 	return []byte(`{
         "initial_pos": {
             "x": 4,
@@ -87,8 +95,20 @@ func bPlayerMove() []byte {
         },
         "target_pos": {
             "x": 4,
-            "y": 3
+            "y": 2
+        }
+    }`)
+}
+
+func bSecondMove() []byte {
+	return []byte(`{
+        "initial_pos": {
+            "x": 3,
+            "y": 0
         },
-        "action": "move"
+        "target_pos": {
+            "x": 7,
+            "y": 4
+        }
     }`)
 }
