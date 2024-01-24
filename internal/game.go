@@ -91,13 +91,102 @@ func (g *Game) move(m entity.Movement) {
 	// check if its a check
 	if g.isCheck(m) {
 		// check if its a checkmate
-		// if g.isCheckMate(m) {
-		//     g.status = CheckMate
-		//     return
-		// }
+		// if its a checkmate, set status to checkmate
+
+		if g.isCheckMate(m) {
+			g.status = CheckMate
+			return
+		}
 
 		g.status = Check
 	}
+}
+
+func (g *Game) isCheckMate(m entity.Movement) bool {
+	// check if king can move or if any piece can block the attack or capture the attacking piece
+	if g.canKingMove(m) || g.canPieceBeBlocked(m) || g.canPieceBeCaptured(m) {
+		return false
+	}
+
+	return true
+}
+
+func (g *Game) canPieceBeBlocked(m entity.Movement) bool {
+	piece := m.GetPiece()
+	possibleSquaresToBeBlocked := g.getAttackingSquares(piece)
+
+	for _, square := range possibleSquaresToBeBlocked {
+		if g.canPieceMoveToSquare(m, square) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (g *Game) canPieceMoveToSquare(m entity.Movement, square *entity.Square) bool {
+	// check if piece can move to square
+	// if it can, check if it can capture the attacking piece
+	// if it can, return true
+
+	// if it cant, return false
+	return false
+}
+
+func (g *Game) canPieceBeCaptured(m entity.Movement) bool {
+	return true
+}
+
+func (g *Game) canKingMove(m entity.Movement) bool {
+	piece := m.GetPiece()
+
+	kColor := entity.White
+	if piece.IsWhite() {
+		kColor = entity.Black
+	}
+
+	kingSquare := g.getKingSquare(kColor)
+	kingPossibleSquares := g.getKingAttackingSquares(kingSquare.GetPiece())
+
+	attackingSquares := g.getAllAttackingSquares(piece.GetColor())
+
+	for _, square := range kingPossibleSquares {
+		if slices.Contains(attackingSquares, square) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (g *Game) getAllAttackingSquares(color entity.Color) []*entity.Square {
+	var squares []*entity.Square
+
+	pieces := g.getAllPieces(color)
+	for _, piece := range pieces {
+		squares = append(squares, g.getAttackingSquares(piece)...)
+	}
+
+	return squares
+}
+
+func (g *Game) getAllPieces(color entity.Color) []*entity.Piece {
+	var pieces []*entity.Piece
+
+	for _, row := range g.board {
+		for _, square := range row {
+			if square.IsEmpty() {
+				continue
+			}
+
+			piece := square.GetPiece()
+			if piece.HasColor(color) {
+				pieces = append(pieces, piece)
+			}
+		}
+	}
+
+	return pieces
 }
 
 func (g *Game) isCheck(m entity.Movement) bool {
@@ -120,10 +209,64 @@ func (g *Game) getAttackingSquares(piece *entity.Piece) []*entity.Square {
 		return g.getPawnAttackingSquares(piece)
 	case entity.Knight:
 		return g.getKnightAttackingSquares(piece)
-		// TODO: implement the rest of the pieces
+	case entity.Bishop:
+		return g.getBishopAttackingSquares(piece)
+	case entity.Rook:
+		return g.getRookAttackingSquares(piece)
+	case entity.Queen:
+		return g.getQueenAttackingSquares(piece)
+	case entity.King:
+		return g.getKingAttackingSquares(piece)
 	default:
-		return nil
+		return []*entity.Square{}
 	}
+}
+
+func (g *Game) getKingAttackingSquares(piece *entity.Piece) []*entity.Square {
+	var squares []*entity.Square
+	y, x := piece.GetSquare().Y, piece.GetSquare().X
+
+	return append(squares, g.GetSquare(y-1, x-1), g.GetSquare(y-1, x), g.GetSquare(y-1, x+1))
+}
+
+func (g *Game) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
+	var squares []*entity.Square
+	y, x := piece.GetSquare().Y, piece.GetSquare().X
+
+	for down := y - 1; down >= 0; down-- {
+		squares = append(squares, g.GetSquare(down, x))
+
+		if !g.GetSquare(down, x).IsEmpty() {
+			break
+		}
+	}
+
+	for up := y + 1; up <= 7; up++ {
+		squares = append(squares, g.GetSquare(up, x))
+		if !g.GetSquare(up, x).IsEmpty() {
+			break
+		}
+	}
+
+	for left := x - 1; left >= 0; left-- {
+		squares = append(squares, g.GetSquare(y, left))
+		if !g.GetSquare(y, left).IsEmpty() {
+			break
+		}
+	}
+
+	for right := x + 1; right <= 7; right++ {
+		squares = append(squares, g.GetSquare(y, right))
+		if !g.GetSquare(y, right).IsEmpty() {
+			break
+		}
+	}
+
+	return squares
+}
+
+func (g *Game) getQueenAttackingSquares(piece *entity.Piece) []*entity.Square {
+	return append(g.getRookAttackingSquares(piece), g.getBishopAttackingSquares(piece)...)
 }
 
 func (g *Game) getPawnAttackingSquares(piece *entity.Piece) []*entity.Square {
@@ -151,6 +294,45 @@ func (g *Game) getKnightAttackingSquares(piece *entity.Piece) []*entity.Square {
 		g.GetSquare(y+2, x-1),
 		g.GetSquare(y+2, x+1),
 	)
+}
+
+func (g *Game) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square {
+	var squares []*entity.Square
+	y, x := piece.GetSquare().Y, piece.GetSquare().X
+
+	for down, left := y-1, x-1; down >= 0 && left >= 0; down, left = down-1, left-1 {
+		squares = append(squares, g.GetSquare(down, left))
+
+		if !g.GetSquare(down, left).IsEmpty() {
+			break
+		}
+	}
+
+	for down, right := y-1, x+1; down >= 0 && right <= 7; down, right = down-1, right+1 {
+		squares = append(squares, g.GetSquare(down, right))
+
+		if !g.GetSquare(down, right).IsEmpty() {
+			break
+		}
+	}
+
+	for up, left := y+1, x-1; up <= 7 && left >= 0; up, left = up+1, left-1 {
+		squares = append(squares, g.GetSquare(up, left))
+
+		if !g.GetSquare(up, left).IsEmpty() {
+			break
+		}
+	}
+
+	for up, right := y+1, x+1; up <= 7 && right <= 7; up, right = up+1, right+1 {
+		squares = append(squares, g.GetSquare(up, right))
+
+		if !g.GetSquare(up, right).IsEmpty() {
+			break
+		}
+	}
+
+	return squares
 }
 
 func (g *Game) getKingSquare(color entity.Color) *entity.Square {

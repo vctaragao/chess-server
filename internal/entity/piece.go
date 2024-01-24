@@ -22,19 +22,19 @@ func NewEmptyPiece() *Piece {
 	}
 }
 
-func (p Piece) GetType() PieceType {
+func (p *Piece) GetType() PieceType {
 	return p.pieceType
 }
 
-func (p Piece) HasColor(c Color) bool {
+func (p *Piece) HasColor(c Color) bool {
 	return p.color == c
 }
 
-func (p Piece) IsWhite() bool {
+func (p *Piece) IsWhite() bool {
 	return p.color == White
 }
 
-func (p Piece) IsBlack() bool {
+func (p *Piece) IsBlack() bool {
 	return p.color == Black
 }
 
