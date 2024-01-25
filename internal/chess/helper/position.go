@@ -1,4 +1,4 @@
-package entity
+package helper
 
 type Position struct {
 	X int

@@ -1,4 +1,4 @@
-package entity
+package board
 
 import (
 	"testing"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/vctaragao/chess-server/internal"
+	"github.com/vctaragao/chess-server/internal/chess"
 )
 
 type (
@@ -23,7 +23,7 @@ type (
 )
 
 func main() {
-	game := internal.NewGame()
+	game := chess.NewGame()
 
 	if err := game.RegisterPlayer("Victor"); err != nil {
 		log.Fatal("unable to register first player", err)

@@ -1,4 +1,4 @@
-package entity
+package chess
 
 import "github.com/google/uuid"
 
