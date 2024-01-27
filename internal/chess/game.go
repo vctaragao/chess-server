@@ -93,79 +93,20 @@ func (g *Game) move(m Movement) {
 	g.board.UpdateAttackingSquares()
 
 	// check if its a check
-	if g.isCheck(m) {
+	kSquare, isCheck := g.isCheck(m)
+	if isCheck {
 		// check if its a checkmate
 		// if its a checkmate, set status to checkmate
 
-		if g.isCheckMate(m) {
+		cms := NewCheckMateService(g, m, kSquare)
+
+		if cms.IsCheckMate() {
 			g.status = CheckMate
 			return
 		}
 
 		g.status = Check
 	}
-}
-
-func (g *Game) isCheckMate(m Movement) bool {
-	// check if king can move or if any piece can block the attack or capture the attacking piece
-	if g.canKingMove(m) || g.canPieceBeBlocked(m) || g.canPieceBeCaptured(m) {
-		return false
-	}
-
-	return true
-}
-
-func (g *Game) canPieceBeBlocked(m Movement) bool {
-	piece := m.GetPiece()
-
-	if piece.Is(entity.Knight) || piece.Is(entity.Pawn) {
-		return false
-	}
-
-	// check if any piece can move to square that is between the attacking piece and the king
-	// get the square that the attacking piece is checking
-
-	return false
-}
-
-func (g *Game) canPieceMoveToSquare(m Movement, square *entity.Square) bool {
-	// TODO: implement
-	return true
-}
-
-func (g *Game) canPieceBeCaptured(m Movement) bool {
-	// TODO: implement
-	return true
-}
-
-func (g *Game) canKingMove(m Movement) bool {
-	piece := m.GetPiece()
-
-	kColor := helper.White
-	if piece.IsWhite() {
-		kColor = helper.Black
-	}
-
-	kingSquare := g.getKingSquare(kColor)
-	kingPossibleSquares := kingSquare.Piece.AttackingSquares
-
-	attackingSquares := g.getAllAttackingSquares(piece.Color)
-
-	for _, square := range kingPossibleSquares {
-		// if square is not empty and has a piece of the same color or it has a piece of a different color that it protected by another piece
-		if !square.IsEmpty() && (square.Piece.HasColor(kColor) || g.isProtected(square, kColor)) {
-			continue
-		}
-		if slices.Contains(attackingSquares, square) {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (g *Game) isProtected(square *entity.Square, color helper.Color) bool {
-	return false
 }
 
 func (g *Game) getAllAttackingSquares(color helper.Color) []*entity.Square {
@@ -198,7 +139,7 @@ func (g *Game) getAllPiecesByColor(color helper.Color) []*entity.Piece {
 	return pieces
 }
 
-func (g *Game) isCheck(m Movement) bool {
+func (g *Game) isCheck(m Movement) (*entity.Square, bool) {
 	piece := m.GetPiece()
 
 	kColor := helper.White
@@ -207,7 +148,7 @@ func (g *Game) isCheck(m Movement) bool {
 	}
 
 	kingSquare := g.getKingSquare(kColor)
-	return slices.Contains(piece.AttackingSquares, kingSquare)
+	return kingSquare, slices.Contains(piece.AttackingSquares, kingSquare)
 }
 
 func (g *Game) getKingSquare(color helper.Color) *entity.Square {
