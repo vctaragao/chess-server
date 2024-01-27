@@ -43,7 +43,7 @@ func main() {
 	parseAndMove(game, bSecondMove())
 }
 
-func parseAndMove(game *internal.Game, movement []byte) {
+func parseAndMove(game *chess.Game, movement []byte) {
 	var movRequest MovementRequest
 	if err := json.Unmarshal(movement, &movRequest); err != nil {
 		log.Fatal("unable to unmarshal movement request", err)

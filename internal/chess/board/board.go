@@ -10,7 +10,7 @@ type Board [8][8]*entity.Square
 
 func NewBoard() Board {
 	board := initializeBoard()
-	board.updateAttackingSquares()
+	board.UpdateAttackingSquares()
 
 	return board
 }

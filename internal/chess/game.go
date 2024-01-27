@@ -125,8 +125,6 @@ func (g *Game) canPieceBeBlocked(m Movement) bool {
 	// check if any piece can move to square that is between the attacking piece and the king
 	// get the square that the attacking piece is checking
 
-	piece = m.GetPiece()
-
 	return false
 }
 
@@ -153,11 +151,9 @@ func (g *Game) canKingMove(m Movement) bool {
 
 	attackingSquares := g.getAllAttackingSquares(piece.Color)
 
-	canKingMove := false
-
 	for _, square := range kingPossibleSquares {
 		// if square is not empty and has a piece of the same color or it has a piece of a different color that it protected by another piece
-		if !square.IsEmpty() && square.Piece.HasColor(kColor) {
+		if !square.IsEmpty() && (square.Piece.HasColor(kColor) || g.isProtected(square, kColor)) {
 			continue
 		}
 		if slices.Contains(attackingSquares, square) {
@@ -168,10 +164,14 @@ func (g *Game) canKingMove(m Movement) bool {
 	return false
 }
 
+func (g *Game) isProtected(square *entity.Square, color helper.Color) bool {
+	return false
+}
+
 func (g *Game) getAllAttackingSquares(color helper.Color) []*entity.Square {
 	var squares []*entity.Square
 
-	pieces := g.getAllPieces(color)
+	pieces := g.getAllPiecesByColor(color)
 	for _, piece := range pieces {
 		squares = append(squares, piece.AttackingSquares...)
 	}
@@ -179,7 +179,7 @@ func (g *Game) getAllAttackingSquares(color helper.Color) []*entity.Square {
 	return squares
 }
 
-func (g *Game) getAllPieces(color helper.Color) []*entity.Piece {
+func (g *Game) getAllPiecesByColor(color helper.Color) []*entity.Piece {
 	var pieces []*entity.Piece
 
 	for _, row := range g.board {

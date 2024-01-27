@@ -11,6 +11,7 @@ type Piece struct {
 	AttackingSquares []*Square
 	PieceType        PieceType
 	Color            helper.Color
+	ProtecedBy       *Piece
 }
 
 func NewPiece(c helper.Color, t PieceType) *Piece {
@@ -41,4 +42,8 @@ func (p *Piece) IsBlack() bool {
 
 func (p *Piece) Is(t PieceType) bool {
 	return p.PieceType == t
+}
+
+func (p *Piece) IsProteced() bool {
+	return p.ProtecedBy != nil
 }
