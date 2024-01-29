@@ -1,33 +1,35 @@
-package chess
+package service
 
 import (
 	"slices"
 
 	"github.com/vctaragao/chess-server/internal/chess/entity"
+	"github.com/vctaragao/chess-server/internal/chess/game"
 	"github.com/vctaragao/chess-server/internal/chess/helper"
 )
 
 type CheckMateService struct {
-	*Game
-	m       Movement
+	*game.Game
+	m       entity.Movement
 	kSquare *entity.Square
 }
 
-func NewCheckMateService(g *Game, m Movement, kSquare *entity.Square) *CheckMateService {
+func NewCheckMateService(g *game.Game) *CheckMateService {
 	return &CheckMateService{
-		Game:    g,
-		m:       m,
-		kSquare: kSquare,
+		Game: g,
 	}
 }
 
-func (s *CheckMateService) IsCheckMate() bool {
+func (s *CheckMateService) HandleCheckMate(m entity.Movement, kSquare *entity.Square) {
+	s.m = m
+	s.kSquare = kSquare
+
 	// check if king can move or if any piece can block the attack or capture the attacking piece
 	if s.canKingMove() || s.canPieceBeBlocked() || s.canPieceBeCaptured() {
-		return false
+		return
 	}
 
-	return true
+	s.Status = game.CheckMate
 }
 
 func (s *CheckMateService) canKingMove() bool {
@@ -36,7 +38,7 @@ func (s *CheckMateService) canKingMove() bool {
 	kColor := s.kSquare.Piece.Color
 	kingPossibleSquares := s.kSquare.Piece.AttackingSquares
 
-	attackingSquares := s.getAllAttackingSquares(piece.Color)
+	attackingSquares := s.GetAllAttackingSquares(piece.Color)
 
 	for _, square := range kingPossibleSquares {
 		// if square is not empty
@@ -79,7 +81,7 @@ func (s *CheckMateService) canPieceBeBlocked() bool {
 		color = helper.Black
 	}
 
-	attackinSquares := s.getAllAttackingSquares(color)
+	attackinSquares := s.GetAllAttackingSquares(color)
 
 	mappedSquares := make(map[helper.Position]struct{})
 	for _, square := range attackinSquares {
@@ -104,7 +106,7 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	// down right
 	if s.kSquare.Y > bSquare.Y && s.kSquare.X > bSquare.X {
 		for y, x := bSquare.Y+1, bSquare.X+1; y < s.kSquare.Y && x < s.kSquare.X; y, x = y+1, x+1 {
-			squares = append(squares, s.board[y][x])
+			squares = append(squares, s.Board[y][x])
 		}
 
 		return squares
@@ -113,7 +115,7 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	// down left
 	if s.kSquare.Y > bSquare.Y && s.kSquare.X < bSquare.X {
 		for y, x := bSquare.Y+1, bSquare.X-1; y < s.kSquare.Y && x > s.kSquare.X; y, x = y+1, x-1 {
-			squares = append(squares, s.board[y][x])
+			squares = append(squares, s.Board[y][x])
 		}
 
 		return squares
@@ -122,7 +124,7 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	// up right
 	if s.kSquare.Y < bSquare.Y && s.kSquare.X > bSquare.X {
 		for y, x := bSquare.Y-1, bSquare.X+1; y > s.kSquare.Y && x < s.kSquare.X; y, x = y-1, x+1 {
-			squares = append(squares, s.board[y][x])
+			squares = append(squares, s.Board[y][x])
 		}
 
 		return squares
@@ -131,7 +133,7 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	// up left
 	if s.kSquare.Y < bSquare.Y && s.kSquare.X < bSquare.X {
 		for y, x := bSquare.Y-1, bSquare.X-1; y > s.kSquare.Y && x > s.kSquare.X; y, x = y-1, x-1 {
-			squares = append(squares, s.board[y][x])
+			squares = append(squares, s.Board[y][x])
 		}
 
 		return squares
@@ -148,7 +150,7 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 	// down
 	if s.kSquare.Y > rSquare.Y {
 		for y := rSquare.Y + 1; y < s.kSquare.Y; y++ {
-			squares = append(squares, s.board[y][rSquare.X])
+			squares = append(squares, s.Board[y][rSquare.X])
 		}
 
 		return squares
@@ -157,7 +159,7 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 	// up
 	if s.kSquare.Y < rSquare.Y {
 		for y := rSquare.Y - 1; y > s.kSquare.Y; y-- {
-			squares = append(squares, s.board[y][rSquare.X])
+			squares = append(squares, s.Board[y][rSquare.X])
 		}
 
 		return squares
@@ -166,7 +168,7 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 	// right
 	if s.kSquare.X > rSquare.X {
 		for x := rSquare.X + 1; x < s.kSquare.X; x++ {
-			squares = append(squares, s.board[rSquare.Y][x])
+			squares = append(squares, s.Board[rSquare.Y][x])
 		}
 
 		return squares
@@ -175,7 +177,7 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 	// left
 	if s.kSquare.X < rSquare.X {
 		for x := rSquare.X - 1; x > s.kSquare.X; x-- {
-			squares = append(squares, s.board[rSquare.Y][x])
+			squares = append(squares, s.Board[rSquare.Y][x])
 		}
 
 		return squares
@@ -195,6 +197,16 @@ func (s *CheckMateService) getQueenCheckingSquares() []*entity.Square {
 }
 
 func (s *CheckMateService) canPieceBeCaptured() bool {
-	// get all checkingSquares
-	return true
+	// get all squares that enemy can attack
+	piece := s.m.GetPiece()
+
+	color := helper.White
+	if piece.IsWhite() {
+		color = helper.Black
+	}
+
+	attackinSquares := s.GetAllAttackingSquares(color)
+
+	// check if any of the checking squares can be captured by an eney piece
+	return slices.Contains(attackinSquares, piece.Square)
 }

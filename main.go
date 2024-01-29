@@ -34,31 +34,30 @@ func main() {
 	}
 
 	game.Render()
-	fmt.Println()
 
-	parseAndMove(game, wFirstPawnMove())
-	parseAndMove(game, bFirstMove())
-
-	parseAndMove(game, wSecondPawnMove())
-	parseAndMove(game, bSecondMove())
-}
-
-func parseAndMove(game *chess.Game, movement []byte) {
-	var movRequest MovementRequest
-	if err := json.Unmarshal(movement, &movRequest); err != nil {
-		log.Fatal("unable to unmarshal movement request", err)
+	moves := []func() []byte{
+		wFirstPawnMove,
+		bFirstMove,
+		wSecondPawnMove,
+		bSecondMove,
 	}
 
-	iSquare := game.GetSquare(movRequest.InitialPosition.Y, movRequest.InitialPosition.X)
-	tSquare := game.GetSquare(movRequest.TargetPosition.Y, movRequest.TargetPosition.X)
+	for _, move := range moves {
+		var m MovementRequest
+		if err := json.Unmarshal(move(), &m); err != nil {
+			log.Fatal("unable to unmarshal movement request", err)
+		}
 
-	m := game.NewMovement(iSquare, tSquare)
-	if err := game.HandleMovement(m); err != nil {
-		log.Println(err, m)
+		iSquare := game.GetSquare(m.InitialPosition.Y, m.InitialPosition.X)
+		tSquare := game.GetSquare(m.TargetPosition.Y, m.TargetPosition.X)
+		if err := game.Move(iSquare, tSquare); err != nil {
+			log.Println(err, m)
+		}
+
+		game.Render()
 	}
 
-	game.Render()
-	fmt.Println()
+	fmt.Println("Status: ", game.GetStatus())
 }
 
 func wFirstPawnMove() []byte {

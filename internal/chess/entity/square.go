@@ -25,9 +25,6 @@ func (s *Square) IsEmpty() bool {
 }
 
 func (s *Square) SetPiece(p *Piece) {
-	if !p.IsNull {
-		s.Empty = false
-	}
-
+	s.Empty = p.IsNull
 	s.Piece = p
 }

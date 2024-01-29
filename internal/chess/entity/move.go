@@ -1,14 +1,12 @@
-package chess
-
-import "github.com/vctaragao/chess-server/internal/chess/entity"
+package entity
 
 type (
 	Action int
 	Result int
 
 	Movement struct {
-		InitialSquare entity.Square
-		TargetSquare  entity.Square
+		InitialSquare *Square
+		TargetSquare  *Square
 		Action        Action
 		Result        Result
 	}
@@ -19,7 +17,7 @@ const (
 	Capture
 )
 
-func NewMovement(initialSquare, targetSquare entity.Square) Movement {
+func NewMovement(initialSquare, targetSquare *Square) Movement {
 	return Movement{
 		InitialSquare: initialSquare,
 		TargetSquare:  targetSquare,
@@ -50,11 +48,11 @@ func (m *Movement) InitialX() int {
 	return m.InitialSquare.X
 }
 
-func (m *Movement) GetPiece() *entity.Piece {
+func (m *Movement) GetPiece() *Piece {
 	return m.InitialSquare.Piece
 }
 
-func (m *Movement) GetTargetPiece() *entity.Piece {
+func (m *Movement) GetTargetPiece() *Piece {
 	return m.TargetSquare.Piece
 }
 
