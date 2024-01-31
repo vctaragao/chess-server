@@ -16,27 +16,6 @@ const (
 	Sub
 )
 
-type Status int
-
-const (
-	None Status = iota
-	Check
-	CheckMate
-)
-
-func (s *Status) String() string {
-	switch *s {
-	case None:
-		return "None"
-	case Check:
-		return "Check"
-	case CheckMate:
-		return "CheckMate"
-	}
-
-	return ""
-}
-
 type Game struct {
 	Status  Status
 	WPlayer *entity.Player
@@ -48,6 +27,12 @@ type Game struct {
 func NewGame() *Game {
 	return &Game{
 		Board: board.NewBoard(),
+	}
+}
+
+func NewGameWithBoard(board string) *Game {
+	return &Game{
+		Board: board.NewBoardFromString(board),
 	}
 }
 
@@ -89,7 +74,7 @@ func (g *Game) GetAllPiecesByColor(color helper.Color) []*entity.Piece {
 	return pieces
 }
 
-func (g *Game) HandlePoints(m entity.Movement) {
+func (g *Game) HandlePoints(m *entity.Movement) {
 	wOp, bOp := Sub, Add
 	tPiece := m.GetTargetPiece()
 
@@ -99,8 +84,8 @@ func (g *Game) HandlePoints(m entity.Movement) {
 
 	g.changeWhitePoints(tPiece.Value, wOp)
 	g.changeBlackPoints(tPiece.Value, bOp)
-
 }
+
 func (g *Game) changeWhitePoints(points int, op Operation) {
 	if op == Add {
 		g.WPlayer.Points += points

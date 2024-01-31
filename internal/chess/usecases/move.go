@@ -24,9 +24,7 @@ func NewMove(g *game.Game, m *service.MovementService, c *service.CheckService, 
 
 func (m *Move) Execute(iSquare, tSquare *entity.Square) (err error) {
 	movement := entity.NewMovement(iSquare, tSquare)
-	if err := m.MovementService.HandleMovement(movement); err != nil {
-		return err
-	}
+	m.MovementService.HandleMovement(movement)
 
 	m.Game.Board.UpdateAttackingSquares()
 	m.Game.ChangeTurn()
@@ -37,5 +35,6 @@ func (m *Move) Execute(iSquare, tSquare *entity.Square) (err error) {
 	}
 
 	m.CheckMateService.HandleCheckMate(movement, kSquare)
+
 	return nil
 }

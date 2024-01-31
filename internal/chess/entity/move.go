@@ -17,8 +17,8 @@ const (
 	Capture
 )
 
-func NewMovement(initialSquare, targetSquare *Square) Movement {
-	return Movement{
+func NewMovement(initialSquare, targetSquare *Square) *Movement {
+	return &Movement{
 		InitialSquare: initialSquare,
 		TargetSquare:  targetSquare,
 	}

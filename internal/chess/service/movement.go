@@ -1,8 +1,6 @@
 package service
 
 import (
-	"errors"
-
 	"github.com/vctaragao/chess-server/internal/chess/entity"
 	"github.com/vctaragao/chess-server/internal/chess/game"
 )
@@ -17,20 +15,7 @@ func NewMovementService(g *game.Game) *MovementService {
 	}
 }
 
-func (s *MovementService) HandleMovement(m entity.Movement) error {
-	if !m.IsValid() {
-		return errors.New("invalid movement")
-	}
-
-	if m.IsCapture() {
-		s.HandlePoints(m)
-	}
-
-	m.TargetSquare.SetPiece(m.GetPiece())
-	s.SetSquare(m.TargetY(), m.TargetX(), m.TargetSquare)
-
+func (s *MovementService) HandleMovement(m *entity.Movement) {
+	m.TargetSquare.SetPiece(m.InitialSquare.Piece)
 	m.InitialSquare.SetPiece(entity.NewEmptyPiece())
-	s.SetSquare(m.InitialY(), m.InitialX(), m.InitialSquare)
-
-	return nil
 }

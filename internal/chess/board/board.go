@@ -2,8 +2,12 @@ package board
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"strings"
 
 	"github.com/vctaragao/chess-server/internal/chess/entity"
+	"github.com/vctaragao/chess-server/internal/chess/helper"
 )
 
 type Board [8][8]*entity.Square
@@ -13,6 +17,70 @@ func NewBoard() Board {
 	board.UpdateAttackingSquares()
 
 	return board
+}
+
+func NewBoardFromString(board string) Board {
+	b := Board{}
+
+	board = strings.ReplaceAll(board, "\n", "")
+
+	reader := strings.NewReader(board)
+	y, x := 0, 0
+
+	for {
+		piece := make([]byte, 2)
+		_, err := reader.Read(piece)
+		if err != nil {
+			if err != io.EOF {
+				log.Fatal(err)
+			}
+
+			break
+		}
+
+		if piece[0] == ' ' {
+			continue
+		}
+
+		color := helper.White
+		if piece[0] == 'B' {
+			color = helper.Black
+		}
+
+		pType := entity.None
+		switch piece[1] {
+		case 'R':
+			pType = entity.Rook
+		case 'B':
+			pType = entity.Bishop
+		case 'K':
+			pType = entity.Knight
+		case 'Q':
+			pType = entity.Queen
+		case 'k':
+			pType = entity.King
+		case 'P':
+			pType = entity.Pawn
+		}
+
+		p := entity.NewEmptyPiece()
+		if pType != entity.None {
+			p = entity.NewPiece(color, pType)
+		}
+
+		square := entity.NewSquare(y, x)
+		square.SetPiece(p)
+
+		b[y][x] = square
+		x++
+
+		if x == 8 {
+			x = 0
+			y++
+		}
+	}
+
+	return b
 }
 
 func initializeBoard() Board {

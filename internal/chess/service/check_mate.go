@@ -10,7 +10,7 @@ import (
 
 type CheckMateService struct {
 	*game.Game
-	m       entity.Movement
+	m       *entity.Movement
 	kSquare *entity.Square
 }
 
@@ -20,7 +20,7 @@ func NewCheckMateService(g *game.Game) *CheckMateService {
 	}
 }
 
-func (s *CheckMateService) HandleCheckMate(m entity.Movement, kSquare *entity.Square) {
+func (s *CheckMateService) HandleCheckMate(m *entity.Movement, kSquare *entity.Square) {
 	s.m = m
 	s.kSquare = kSquare
 

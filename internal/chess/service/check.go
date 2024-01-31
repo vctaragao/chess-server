@@ -18,7 +18,7 @@ func NewCheckService(g *game.Game) *CheckService {
 	}
 }
 
-func (s *CheckService) HandleCheck(m entity.Movement) (*entity.Square, bool) {
+func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
 	piece := m.GetPiece()
 
 	kColor := helper.White
