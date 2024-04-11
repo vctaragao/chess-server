@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vctaragao/chess-server/internal/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/game"
 )
 
 func TestRegisterPlayer(t *testing.T) {

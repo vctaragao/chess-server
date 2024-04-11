@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/game"
 )
 
 func TestMovement(t *testing.T) {

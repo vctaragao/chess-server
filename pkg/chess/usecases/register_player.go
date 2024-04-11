@@ -1,6 +1,6 @@
 package usecases
 
-import "github.com/vctaragao/chess-server/internal/chess/service"
+import "github.com/vctaragao/chess/pkg/chess/service"
 
 type RegisterPlayer struct {
 	RegisterPlayerService *service.RegisterPlayerService

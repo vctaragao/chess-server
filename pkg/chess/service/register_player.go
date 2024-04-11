@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/game"
 )
 
 var ErrMaxPlayer = errors.New("Game already full of players")

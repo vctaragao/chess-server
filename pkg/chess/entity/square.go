@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/vctaragao/chess-server/internal/chess/helper"
+	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
 type Square struct {

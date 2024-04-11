@@ -6,8 +6,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/helper"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
 type Board [8][8]*entity.Square
@@ -153,4 +153,35 @@ func (b Board) Show() string {
 	}
 
 	return strBoard
+}
+
+func (b Board) State() [][]string {
+	log.Println("State")
+	state := make([][]string, 8)
+	for i := range state {
+		state[i] = make([]string, 8)
+	}
+
+	for y := 0; y < 8; y++ {
+		for x := 0; x < 8; x++ {
+			log.Println("Square", y, x)
+			s := b[y][x]
+			if s.IsEmpty() {
+				log.Println("Empty")
+				state[y][x] = string(entity.None)
+				continue
+			}
+
+			log.Println("Piece", s.Piece)
+			strPiece := fmt.Sprintf("%s%s", s.Piece.Color, s.Piece.PieceType)
+			log.Println("strPiece", strPiece)
+
+			state[y][x] = fmt.Sprintf("%s%s", s.Piece.Color, s.Piece.PieceType)
+			log.Println("Piece inserted into State")
+		}
+	}
+
+	log.Println("Finished state", state)
+
+	return state
 }

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/vctaragao/chess-server/internal/chess/board"
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/helper"
+	"github.com/vctaragao/chess/pkg/chess/board"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
 type Operation int
@@ -30,9 +30,9 @@ func NewGame() *Game {
 	}
 }
 
-func NewGameWithBoard(board string) *Game {
+func NewGameWithBoard(b string) *Game {
 	return &Game{
-		Board: board.NewBoardFromString(board),
+		Board: board.NewBoardFromString(b),
 	}
 }
 

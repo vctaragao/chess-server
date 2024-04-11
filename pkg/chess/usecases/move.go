@@ -1,9 +1,9 @@
 package usecases
 
 import (
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/game"
-	"github.com/vctaragao/chess-server/internal/chess/service"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/service"
 )
 
 type Move struct {

@@ -3,8 +3,8 @@ package board
 import (
 	"slices"
 
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/helper"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
 func (b *Board) UpdateAttackingSquares() {

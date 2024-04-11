@@ -1,11 +1,18 @@
 package chess
 
 import (
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/game"
-	"github.com/vctaragao/chess-server/internal/chess/service"
-	"github.com/vctaragao/chess-server/internal/chess/usecases"
+	"log"
+
+	"github.com/vctaragao/chess/pkg/chess/board"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/service"
+	"github.com/vctaragao/chess/pkg/chess/usecases"
 )
+
+type GameState struct {
+	Board [][]string
+}
 
 type facade struct {
 	game           *game.Game
@@ -38,6 +45,10 @@ func (c *facade) Render() {
 	c.game.Render()
 }
 
+func (c *facade) Board() board.Board {
+	return c.game.Board
+}
+
 func (f *facade) Move(iSquare, tSquare *entity.Square) (err error) {
 	return f.move.Execute(iSquare, tSquare)
 }
@@ -48,4 +59,11 @@ func (f *facade) GetSquare(y, x int) *entity.Square {
 
 func (f *facade) GetStatus() game.Status {
 	return f.game.Status
+}
+
+func (f *facade) GetState() GameState {
+	log.Println("GetState")
+	return GameState{
+		Board: f.game.Board.State(),
+	}
 }

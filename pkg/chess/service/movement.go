@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/vctaragao/chess-server/internal/chess/entity"
-	"github.com/vctaragao/chess-server/internal/chess/game"
+	"github.com/vctaragao/chess/pkg/chess/entity"
+	"github.com/vctaragao/chess/pkg/chess/game"
 )
 
 type MovementService struct {
