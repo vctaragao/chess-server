@@ -20,7 +20,7 @@ const (
 )
 
 func (p Piece) String() string {
-	return [...]string{"_", "♙", "♖", "♘", "♗", "♕", "♔", "♟", "♜", "♞", "♝", "♛", "♚"}[p]
+	return [...]string{" ", "♙", "♖", "♘", "♗", "♕", "♔", "♟", "♜", "♞", "♝", "♛", "♚"}[p]
 }
 
 func ParsePiece(piece string) Piece {

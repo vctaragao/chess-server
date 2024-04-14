@@ -24,8 +24,7 @@ const (
 	BKing   = "Bk"
 )
 
-type ChessAdapter struct {
-}
+type ChessAdapter struct{}
 
 func (a *ChessAdapter) NewGame() [][]entity.Piece {
 	log.Println("NewGame")

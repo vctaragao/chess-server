@@ -27,8 +27,6 @@ func (c *Chess) Init() tea.Cmd {
 	chessAdapter := &internal.ChessAdapter{}
 	board := chessAdapter.NewGame()
 
-	log.Println("board", board)
-
 	c.board = board
 	c.selectedSquare = nil
 
@@ -48,41 +46,29 @@ func (c *Chess) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (c Chess) View() string {
 	if len(c.board) == 0 {
-		return "Loading..."
+		return "Board vazio..."
 	}
 
-	strBoard := ""
+	displayBoard := make([][]string, 8)
+
+	for i := range displayBoard {
+		displayBoard[i] = make([]string, 8)
+	}
+
 	for y := 0; y < 8; y++ {
 		for x := 0; x < 8; x++ {
-			strBoard += fmt.Sprintf(" %s ", c.board[y][x])
+			displayBoard[y][x] = c.board[y][x].String()
 		}
-		strBoard += "\n"
 	}
 
-	log.Println(strBoard)
-	return strBoard
-}
-
-func main() {
 	re := lipgloss.NewRenderer(os.Stdout)
 	labelStyle := re.NewStyle().Foreground(lipgloss.Color("241"))
-
-	board := [][]string{
-		{"♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"},
-		{"♟", "♟", "♟", "♟", "♟", "♟", "♟", "♟"},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{" ", " ", " ", " ", " ", " ", " ", " "},
-		{"♙", "♙", "♙", "♙", "♙", "♙", "♙", "♙"},
-		{"♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"},
-	}
 
 	t := table.New().
 		Border(lipgloss.NormalBorder()).
 		BorderRow(true).
 		BorderColumn(true).
-		Rows(board...).
+		Rows(displayBoard...).
 		StyleFunc(func(row, col int) lipgloss.Style {
 			return lipgloss.NewStyle().Padding(0, 1)
 		})
@@ -90,8 +76,10 @@ func main() {
 	ranks := labelStyle.Render(strings.Join([]string{" A", "B", "C", "D", "E", "F", "G", "H  "}, "   "))
 	files := labelStyle.Render(strings.Join([]string{" 1", "2", "3", "4", "5", "6", "7", "8 "}, "\n\n "))
 
-	fmt.Println(lipgloss.JoinVertical(lipgloss.Right, lipgloss.JoinHorizontal(lipgloss.Center, files, t.Render()), ranks) + "\n")
+	return lipgloss.JoinVertical(lipgloss.Right, lipgloss.JoinHorizontal(lipgloss.Center, files, t.Render()), ranks) + "\n"
+}
 
+func main() {
 	f, err := tea.LogToFile("chess.log", "debug")
 	if err != nil {
 		log.Fatal(err)
