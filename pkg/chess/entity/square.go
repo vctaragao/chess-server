@@ -6,13 +6,11 @@ import (
 
 type Square struct {
 	helper.Position
-	Empty bool
 	Piece *Piece
 }
 
 func NewSquare(y, x int) *Square {
 	return &Square{
-		Empty: true,
 		Position: helper.Position{
 			X: x,
 			Y: y,
@@ -21,10 +19,13 @@ func NewSquare(y, x int) *Square {
 }
 
 func (s *Square) IsEmpty() bool {
-	return s.Empty
+	return s.Piece == nil
 }
 
 func (s *Square) SetPiece(p *Piece) {
-	s.Empty = p.IsNull
 	s.Piece = p
+}
+
+func (s *Square) RemovePiece() {
+	s.Piece = nil
 }

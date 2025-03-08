@@ -3,12 +3,13 @@ package service
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/vctaragao/chess/pkg/chess/entity"
 	"github.com/vctaragao/chess/pkg/chess/game"
 )
 
 func TestCheck(t *testing.T) {
-	boardInitial := `
+	_ = `
  BR  BK  BB  __  Bk  BB  BK  BR 
  BP  BP  BP  BP  BP  BP  BP  BP 
  __  __  __  __  __  __  __  __ 
@@ -18,14 +19,13 @@ func TestCheck(t *testing.T) {
  WP  WP  WP  WP  __  WP  WP  WP 
  WR  WK  WB  WQ  Wk  WB  WK  WR 
 `
-	g := game.NewGame()
+	game, err := game.NewGame()
+	assert.NoError(t, err)
 
-	service := NewCheckService(g)
+	service := NewCheckService(game)
 
-	iSquare := g.Board[5][3]
-	tSquare := g.Board[4][3]
-
-	piece := iSquare.Piece
+	iSquare := game.Board[5][3]
+	tSquare := game.Board[4][3]
 
 	movement := entity.NewMovement(iSquare, tSquare)
 

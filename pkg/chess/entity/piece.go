@@ -6,7 +6,6 @@ import (
 
 type Piece struct {
 	Value            int
-	IsNull           bool
 	Square           *Square
 	AttackingSquares []*Square
 	PieceType        PieceType
@@ -14,17 +13,11 @@ type Piece struct {
 	ProtecedBy       *Piece
 }
 
-func NewPiece(c helper.Color, t PieceType) *Piece {
+func NewPiece(c helper.Color, t PieceType, s *Square) *Piece {
 	return &Piece{
 		Color:     c,
 		PieceType: t,
-	}
-}
-
-func NewEmptyPiece() *Piece {
-	return &Piece{
-		IsNull:    true,
-		PieceType: None,
+		Square:    s,
 	}
 }
 

@@ -9,7 +9,9 @@ import (
 )
 
 func TestMovement(t *testing.T) {
-	g := game.NewGame()
+	g, err := game.NewGame()
+	assert.NoError(t, err)
+
 	mService := NewMovementService(g)
 
 	iSquare := g.Board[1][2]
@@ -21,6 +23,6 @@ func TestMovement(t *testing.T) {
 
 	mService.HandleMovement(movement)
 
+	assert.Nil(t, iSquare.Piece)
 	assert.Equal(t, tSquare.Piece, piece)
-	assert.Equal(t, iSquare.Piece, entity.NewEmptyPiece())
 }

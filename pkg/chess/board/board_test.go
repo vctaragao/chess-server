@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vctaragao/chess-server/internal/chess/entity"
+	"github.com/stretchr/testify/require"
+	"github.com/vctaragao/chess/pkg/chess/entity"
 )
 
 func TestNewBoard(t *testing.T) {
@@ -18,7 +19,9 @@ func TestNewBoard(t *testing.T) {
  WP  WP  WP  WP  WP  WP  WP  WP 
  WR  WK  WB  WQ  Wk  WB  WK  WR 
 `
-	board := NewBoard()
+	board, err := NewBoard()
+	assert.NoError(t, err)
+
 	assert.Equal(t, expectedBoard, board.Show())
 }
 
@@ -45,13 +48,15 @@ WR  WK  WB  WQ  Wk  WB  WK  WR
  WR  WK  WB  WQ  Wk  WB  WK  WR 
 `
 
-	board := NewBoardFromString(inputBoard)
+	board, err := NewBoardFromString(inputBoard)
+	require.NoError(t, err)
 
 	assert.Equal(t, expectedBoard, board.Show())
 }
 
 func TestProtectedBy(t *testing.T) {
-	board := NewBoard()
+	board, err := NewBoard()
+	assert.NoError(t, err)
 
 	shouldBeProtected := []*entity.Square{
 		// BPieces

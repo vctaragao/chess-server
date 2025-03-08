@@ -8,18 +8,20 @@ import (
 )
 
 func TestRegisterPlayer(t *testing.T) {
-	g := game.NewGame()
-	service := NewRegisterPlayerService(g)
-
-	err := service.Execute("player1")
+	game, err := game.NewGame()
 	assert.NoError(t, err)
 
-	assert.Equal(t, g.WPlayer.Nick, "player1")
+	service := NewRegisterPlayerService(game)
+
+	err = service.Execute("player1")
+	assert.NoError(t, err)
+
+	assert.Equal(t, game.WPlayer.Nick, "player1")
 
 	err = service.Execute("player2")
 	assert.NoError(t, err)
 
-	assert.Equal(t, g.BPlayer.Nick, "player2")
+	assert.Equal(t, game.BPlayer.Nick, "player2")
 
 	err = service.Execute("player3")
 	assert.Error(t, err)

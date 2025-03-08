@@ -24,16 +24,30 @@ type Game struct {
 	Turn    helper.Color
 }
 
-func NewGame() *Game {
-	return &Game{
-		Board: board.NewBoard(),
+func NewGame() (*Game, error) {
+	game := &Game{}
+
+	board, err := board.NewBoard()
+	if err != nil {
+		return game, err
 	}
+
+	game.Board = board
+
+	return game, nil
 }
 
-func NewGameWithBoard(b string) *Game {
-	return &Game{
-		Board: board.NewBoardFromString(b),
+func NewGameWithBoard(boardStr string) (*Game, error) {
+	game := &Game{}
+
+	board, err := board.NewBoardFromString(boardStr)
+	if err != nil {
+		return game, err
 	}
+
+	game.Board = board
+
+	return game, nil
 }
 
 func (g *Game) Render() {

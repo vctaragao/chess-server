@@ -17,5 +17,5 @@ func NewMovementService(g *game.Game) *MovementService {
 
 func (s *MovementService) HandleMovement(m *entity.Movement) {
 	m.TargetSquare.SetPiece(m.InitialSquare.Piece)
-	m.InitialSquare.SetPiece(entity.NewEmptyPiece())
+	m.InitialSquare.RemovePiece()
 }

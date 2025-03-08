@@ -10,9 +10,9 @@ import (
 func (b *Board) UpdateAttackingSquares() {
 	b.ClearProtecedBy()
 
-	for y := 0; y < 8; y++ {
-		for x := 0; x < 8; x++ {
-			square := b[y][x]
+	for line := 0; line < 8; line++ {
+		for column := 0; column < 8; column++ {
+			square := b[line][column]
 			if square.IsEmpty() {
 				continue
 			}
