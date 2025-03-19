@@ -1,5 +1,7 @@
 package entity
 
+import "errors"
+
 type (
 	Action int
 	Result int
@@ -12,16 +14,24 @@ type (
 	}
 )
 
+var ErrInvalidMovement = errors.New("invalid movement")
+
 const (
 	Move Action = iota
 	Capture
 )
 
-func NewMovement(initialSquare, targetSquare *Square) *Movement {
-	return &Movement{
+func NewMovement(initialSquare, targetSquare *Square) (*Movement, error) {
+	m := &Movement{
 		InitialSquare: initialSquare,
 		TargetSquare:  targetSquare,
 	}
+
+	if !m.IsValid() {
+		return m, ErrInvalidMovement
+	}
+
+	return m, nil
 }
 
 func NewActionFromString(action string) Action {
@@ -32,20 +42,20 @@ func NewActionFromString(action string) Action {
 	return Move
 }
 
-func (m *Movement) TargetY() int {
-	return m.TargetSquare.Y
+func (m *Movement) TargetLine() int {
+	return m.TargetSquare.Line
 }
 
-func (m *Movement) TargetX() int {
-	return m.TargetSquare.X
+func (m *Movement) TargetColumn() int {
+	return m.TargetSquare.Column
 }
 
-func (m *Movement) InitialY() int {
-	return m.InitialSquare.Y
+func (m *Movement) InitialLine() int {
+	return m.InitialSquare.Line
 }
 
-func (m *Movement) InitialX() int {
-	return m.InitialSquare.X
+func (m *Movement) InitialColumn() int {
+	return m.InitialSquare.Column
 }
 
 func (m *Movement) GetPiece() *Piece {
@@ -56,6 +66,8 @@ func (m *Movement) GetTargetPiece() *Piece {
 	return m.TargetSquare.Piece
 }
 
+// TODO: make this validation function more robust
+// to handle other possible cases
 func (m *Movement) IsValid() bool {
 	if !m.TargetSquare.IsEmpty() && m.TargetSquare.Piece.Color == m.InitialSquare.Piece.Color {
 		return false

@@ -16,6 +16,6 @@ func NewMovementService(g *game.Game) *MovementService {
 }
 
 func (s *MovementService) HandleMovement(m *entity.Movement) {
-	m.TargetSquare.SetPiece(m.InitialSquare.Piece)
-	m.InitialSquare.RemovePiece()
+	s.Game.SetSquare(m.TargetSquare.Line, m.TargetSquare.Column, m.InitialSquare)
+	s.Game.SetSquare(m.InitialSquare.Line, m.InitialSquare.Column, nil)
 }

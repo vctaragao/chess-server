@@ -19,7 +19,8 @@ func TestMovement(t *testing.T) {
 
 	piece := iSquare.Piece
 
-	movement := entity.NewMovement(iSquare, tSquare)
+	movement, err := entity.NewMovement(iSquare, tSquare)
+	assert.NoError(t, err)
 
 	mService.HandleMovement(movement)
 

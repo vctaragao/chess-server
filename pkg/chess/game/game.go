@@ -1,6 +1,7 @@
 package game
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,8 @@ import (
 )
 
 type Operation int
+
+var ErrNoPieceFound = errors.New("no piece found")
 
 const (
 	Add Operation = iota
@@ -51,11 +54,43 @@ func NewGameWithBoard(boardStr string) (*Game, error) {
 }
 
 func (g *Game) Render() {
-	fmt.Printf("%s: %d\n", g.BPlayer.Nick, g.BPlayer.Points)
+	if g.BPlayer != nil {
+		fmt.Printf("%s: %d\n", g.BPlayer.Nick, g.BPlayer.Points)
+	}
+
 	fmt.Print(strings.TrimPrefix(g.Board.Show(), "\n"))
-	fmt.Printf("%s: %d\n\n", g.WPlayer.Nick, g.WPlayer.Points)
+
+	if g.WPlayer != nil {
+		fmt.Printf("%s: %d\n\n", g.WPlayer.Nick, g.WPlayer.Points)
+	}
 
 	fmt.Println("Player turn: ", g.Turn)
+}
+
+func (g *Game) FindPiece(pieceStr string) (*entity.Square, error) {
+	pieceType, err := entity.PieceTypeFromString(pieceStr[1])
+	if err != nil {
+		return nil, fmt.Errorf("parsing piece from string: %w", err)
+	}
+
+	color, err := helper.ColorFromStr(pieceStr[0])
+	if err != nil {
+		return nil, fmt.Errorf("parsing color from string: %w", err)
+	}
+
+	for _, row := range g.Board {
+		for _, square := range row {
+			if square.IsEmpty() {
+				continue
+			}
+
+			if square.Piece.Color == color && square.Piece.PieceType == pieceType {
+				return square, nil
+			}
+		}
+	}
+
+	return nil, ErrNoPieceFound
 }
 
 func (g *Game) GetAllAttackingSquares(color helper.Color) []*entity.Square {
@@ -117,12 +152,16 @@ func (g *Game) changeBlackPoints(points int, op Operation) {
 	g.BPlayer.Points -= points
 }
 
-func (g *Game) GetSquare(y, x int) *entity.Square {
-	return g.Board[y][x]
+func (g *Game) GetSquare(line, column int) *entity.Square {
+	return g.Board[line][column]
 }
 
-func (g *Game) SetSquare(y, x int, square *entity.Square) {
-	g.Board[y][x] = square
+func (g *Game) SetSquare(line, column int, square *entity.Square) {
+	if square == nil {
+		square = entity.NewSquare(line, column)
+	}
+
+	g.Board[line][column] = square
 }
 
 func (g *Game) ParseAction(action string) entity.Action {

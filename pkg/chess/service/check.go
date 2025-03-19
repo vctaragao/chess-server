@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/vctaragao/chess/pkg/chess/entity"
@@ -13,13 +14,11 @@ type CheckService struct {
 }
 
 func NewCheckService(g *game.Game) *CheckService {
-	return &CheckService{
-		Game: g,
-	}
+	return &CheckService{Game: g}
 }
 
 func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
-	piece := m.GetPiece()
+	piece := m.GetTargetPiece()
 
 	kColor := helper.White
 	if piece.IsWhite() {
@@ -28,6 +27,8 @@ func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
 
 	// check if its a direct check
 	kingSquare := s.getKingSquare(kColor)
+	fmt.Println("kingSquare:", kingSquare)
+	fmt.Println("piece attacking squares:", piece.AttackingSquares)
 	if slices.Contains(piece.AttackingSquares, kingSquare) {
 		return kingSquare, true
 	}
@@ -50,6 +51,8 @@ func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
 	return kingSquare, false
 }
 
+// TODO: Optimize this saving the kings positions in the game struct
+// in that way we would not need to serch the hole board on every move
 func (s *CheckService) getKingSquare(color helper.Color) *entity.Square {
 	for _, row := range s.Board {
 		for _, square := range row {

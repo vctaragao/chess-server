@@ -104,8 +104,8 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	// get all squares between bishop and king
 	var squares []*entity.Square
 	// down right
-	if s.kSquare.Y > bSquare.Y && s.kSquare.X > bSquare.X {
-		for y, x := bSquare.Y+1, bSquare.X+1; y < s.kSquare.Y && x < s.kSquare.X; y, x = y+1, x+1 {
+	if s.kSquare.Line > bSquare.Line && s.kSquare.Column > bSquare.Column {
+		for y, x := bSquare.Line+1, bSquare.Column+1; y < s.kSquare.Line && x < s.kSquare.Column; y, x = y+1, x+1 {
 			squares = append(squares, s.Board[y][x])
 		}
 
@@ -113,8 +113,8 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	}
 
 	// down left
-	if s.kSquare.Y > bSquare.Y && s.kSquare.X < bSquare.X {
-		for y, x := bSquare.Y+1, bSquare.X-1; y < s.kSquare.Y && x > s.kSquare.X; y, x = y+1, x-1 {
+	if s.kSquare.Line > bSquare.Line && s.kSquare.Column < bSquare.Column {
+		for y, x := bSquare.Line+1, bSquare.Column-1; y < s.kSquare.Line && x > s.kSquare.Column; y, x = y+1, x-1 {
 			squares = append(squares, s.Board[y][x])
 		}
 
@@ -122,8 +122,8 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	}
 
 	// up right
-	if s.kSquare.Y < bSquare.Y && s.kSquare.X > bSquare.X {
-		for y, x := bSquare.Y-1, bSquare.X+1; y > s.kSquare.Y && x < s.kSquare.X; y, x = y-1, x+1 {
+	if s.kSquare.Line < bSquare.Line && s.kSquare.Column > bSquare.Column {
+		for y, x := bSquare.Line-1, bSquare.Column+1; y > s.kSquare.Line && x < s.kSquare.Column; y, x = y-1, x+1 {
 			squares = append(squares, s.Board[y][x])
 		}
 
@@ -131,8 +131,8 @@ func (s *CheckMateService) getBishopCheckingSquares() []*entity.Square {
 	}
 
 	// up left
-	if s.kSquare.Y < bSquare.Y && s.kSquare.X < bSquare.X {
-		for y, x := bSquare.Y-1, bSquare.X-1; y > s.kSquare.Y && x > s.kSquare.X; y, x = y-1, x-1 {
+	if s.kSquare.Line < bSquare.Line && s.kSquare.Column < bSquare.Column {
+		for y, x := bSquare.Line-1, bSquare.Column-1; y > s.kSquare.Line && x > s.kSquare.Column; y, x = y-1, x-1 {
 			squares = append(squares, s.Board[y][x])
 		}
 
@@ -148,36 +148,36 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 	// get all squares between rook and king
 	var squares []*entity.Square
 	// down
-	if s.kSquare.Y > rSquare.Y {
-		for y := rSquare.Y + 1; y < s.kSquare.Y; y++ {
-			squares = append(squares, s.Board[y][rSquare.X])
+	if s.kSquare.Line > rSquare.Line {
+		for y := rSquare.Line + 1; y < s.kSquare.Line; y++ {
+			squares = append(squares, s.Board[y][rSquare.Column])
 		}
 
 		return squares
 	}
 
 	// up
-	if s.kSquare.Y < rSquare.Y {
-		for y := rSquare.Y - 1; y > s.kSquare.Y; y-- {
-			squares = append(squares, s.Board[y][rSquare.X])
+	if s.kSquare.Line < rSquare.Line {
+		for y := rSquare.Line - 1; y > s.kSquare.Line; y-- {
+			squares = append(squares, s.Board[y][rSquare.Column])
 		}
 
 		return squares
 	}
 
 	// right
-	if s.kSquare.X > rSquare.X {
-		for x := rSquare.X + 1; x < s.kSquare.X; x++ {
-			squares = append(squares, s.Board[rSquare.Y][x])
+	if s.kSquare.Column > rSquare.Column {
+		for x := rSquare.Column + 1; x < s.kSquare.Column; x++ {
+			squares = append(squares, s.Board[rSquare.Line][x])
 		}
 
 		return squares
 	}
 
 	// left
-	if s.kSquare.X < rSquare.X {
-		for x := rSquare.X - 1; x > s.kSquare.X; x-- {
-			squares = append(squares, s.Board[rSquare.Y][x])
+	if s.kSquare.Column < rSquare.Column {
+		for x := rSquare.Column - 1; x > s.kSquare.Column; x-- {
+			squares = append(squares, s.Board[rSquare.Line][x])
 		}
 
 		return squares
@@ -189,7 +189,7 @@ func (s *CheckMateService) getRookCheckingSquares() []*entity.Square {
 func (s *CheckMateService) getQueenCheckingSquares() []*entity.Square {
 	qSquare := s.m.TargetSquare
 
-	if qSquare.Y == s.kSquare.Y || qSquare.X == s.kSquare.X {
+	if qSquare.Line == s.kSquare.Line || qSquare.Column == s.kSquare.Column {
 		return s.getRookCheckingSquares()
 	}
 

@@ -22,19 +22,25 @@ func NewMove(g *game.Game, m *service.MovementService, c *service.CheckService, 
 	}
 }
 
-func (m *Move) Execute(iSquare, tSquare *entity.Square) (err error) {
-	movement := entity.NewMovement(iSquare, tSquare)
+func (m *Move) Execute(iLine, iColumn, tLine, tColumn int) (err error) {
+	iSquare := m.Game.GetSquare(iLine, iColumn)
+	tSquare := m.Game.GetSquare(tLine, tColumn)
+
+	movement, err := entity.NewMovement(iSquare, tSquare)
+	if err != nil {
+		return err
+	}
+
 	m.MovementService.HandleMovement(movement)
 
 	m.Game.Board.UpdateAttackingSquares()
-	m.Game.ChangeTurn()
 
 	kSquare, isCheck := m.CheckService.HandleCheck(movement)
-	if !isCheck {
-		return nil
+	if isCheck {
+		m.CheckMateService.HandleCheckMate(movement, kSquare)
 	}
 
-	m.CheckMateService.HandleCheckMate(movement, kSquare)
+	m.Game.ChangeTurn()
 
 	return nil
 }

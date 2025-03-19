@@ -20,8 +20,11 @@ type facade struct {
 	registerPlayer *usecases.RegisterPlayer
 }
 
-func NewGame() *facade {
-	game := game.NewGame()
+func NewGame() (*facade, error) {
+	game, err := game.NewGame()
+	if err != nil {
+		return nil, err
+	}
 
 	checkService := service.NewCheckService(game)
 	movementService := service.NewMovementService(game)
@@ -34,7 +37,7 @@ func NewGame() *facade {
 		move:           usecases.NewMove(game, movementService, checkService, checkMateService),
 	}
 
-	return facade
+	return facade, nil
 }
 
 func (f *facade) RegisterPlayer(nick string) error {
@@ -49,12 +52,12 @@ func (c *facade) Board() board.Board {
 	return c.game.Board
 }
 
-func (f *facade) Move(iSquare, tSquare *entity.Square) (err error) {
-	return f.move.Execute(iSquare, tSquare)
+func (f *facade) Move(iLine, iColumn, tLine, tColumn int) (err error) {
+	return f.move.Execute(iLine, iColumn, tLine, tColumn)
 }
 
-func (f *facade) GetSquare(y, x int) *entity.Square {
-	return f.game.GetSquare(y, x)
+func (f *facade) GetSquare(line, column int) *entity.Square {
+	return f.game.GetSquare(line, column)
 }
 
 func (f *facade) GetStatus() game.Status {

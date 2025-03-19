@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/vctaragao/chess/internal/entity"
@@ -26,9 +27,13 @@ const (
 
 type ChessAdapter struct{}
 
-func (a *ChessAdapter) NewGame() [][]entity.Piece {
+func (a *ChessAdapter) NewGame() ([][]entity.Piece, error) {
 	log.Println("NewGame")
-	game := chess.NewGame()
+	game, err := chess.NewGame()
+	if err != nil {
+		return game, fmt.Errorf("creating game: %w", err)
+	}
+
 	log.Println("game", game)
 
 	gameState := game.GetState()
@@ -45,7 +50,7 @@ func (a *ChessAdapter) NewGame() [][]entity.Piece {
 		}
 	}
 
-	return state
+	return state, nil
 }
 
 func parsePiece(p string) entity.Piece {

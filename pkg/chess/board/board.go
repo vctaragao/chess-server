@@ -23,12 +23,24 @@ func NewBoard() (Board, error) {
 }
 
 func NewBoardFromString(boardStr string) (Board, error) {
+	board, err := initializeBoardFromString(boardStr)
+	if err != nil {
+		return board, fmt.Errorf("initializing board from string: %w", err)
+	}
+
+	board.UpdateAttackingSquares()
+
+	return board, nil
+}
+
+func initializeBoardFromString(boardStr string) (Board, error) {
 	board := Board{}
 
-	boardStr = strings.ReplaceAll(boardStr, "\n", "")
+	boardStr = strings.TrimSpace(boardStr)
+	boardStr = strings.ReplaceAll(boardStr, "\n", "  ")
 
 	reader := strings.NewReader(boardStr)
-	y, x := 0, 0
+	line, column := 0, 0
 
 	for {
 		piece := make([]byte, 2)
@@ -45,7 +57,7 @@ func NewBoardFromString(boardStr string) (Board, error) {
 			continue
 		}
 
-		square := entity.NewSquare(y, x)
+		square := entity.NewSquare(line, column)
 
 		color := helper.White
 		if piece[0] == 'B' {
@@ -64,16 +76,17 @@ func NewBoardFromString(boardStr string) (Board, error) {
 
 		square.SetPiece(p)
 
-		board[y][x] = square
-		x++
+		board[line][column] = square
+		column++
 
-		if x == 8 {
-			x = 0
-			y++
+		if column == 8 {
+			column = 0
+			line++
 		}
 	}
 
 	return board, nil
+
 }
 
 func initializeBoard() (Board, error) {

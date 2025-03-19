@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"fmt"
+
 	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
@@ -39,4 +41,8 @@ func (p *Piece) Is(t PieceType) bool {
 
 func (p *Piece) IsProteced() bool {
 	return p.ProtecedBy != nil
+}
+
+func (p *Piece) String() string {
+	return fmt.Sprintf("Piece: %s%s", p.Color, p.PieceType)
 }

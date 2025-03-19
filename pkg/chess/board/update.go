@@ -24,9 +24,9 @@ func (b *Board) UpdateAttackingSquares() {
 }
 
 func (b *Board) ClearProtecedBy() {
-	for y := 0; y < 8; y++ {
-		for x := 0; x < 8; x++ {
-			square := b[y][x]
+	for line := 0; line < 8; line++ {
+		for column := 0; column < 8; column++ {
+			square := b[line][column]
 			if square.IsEmpty() {
 				continue
 			}
@@ -57,60 +57,60 @@ func (b *Board) getAttackingSquares(p *entity.Piece) []*entity.Square {
 
 func (b *Board) getKingAttackingSquares(p *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	y, x := p.Square.Y, p.Square.X
+	line, column := p.Square.Line, p.Square.Column
 
 	// up
-	if y-1 >= 0 {
-		targetSquare := b[y-1][x]
+	if line-1 >= 0 {
+		targetSquare := b[line-1][column]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// down
-	if y+1 <= 7 {
-		targetSquare := b[y+1][x]
+	if line+1 <= 7 {
+		targetSquare := b[line+1][column]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// left
-	if x-1 >= 0 {
-		targetSquare := b[y][x-1]
+	if column-1 >= 0 {
+		targetSquare := b[line][column-1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// right
-	if x+1 <= 7 {
-		targetSquare := b[y][x+1]
+	if column+1 <= 7 {
+		targetSquare := b[line][column+1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// up-left
-	if y-1 >= 0 && x-1 >= 0 {
-		targetSquare := b[y-1][x-1]
+	if line-1 >= 0 && column-1 >= 0 {
+		targetSquare := b[line-1][column-1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// up-right
-	if y-1 >= 0 && x+1 <= 7 {
-		targetSquare := b[y-1][x+1]
+	if line-1 >= 0 && column+1 <= 7 {
+		targetSquare := b[line-1][column+1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// down-left
-	if y+1 <= 7 && x-1 >= 0 {
-		targetSquare := b[y+1][x-1]
+	if line+1 <= 7 && column-1 >= 0 {
+		targetSquare := b[line+1][column-1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
 
 	// down-right
-	if y+1 <= 7 && x+1 <= 7 {
-		targetSquare := b[y+1][x+1]
+	if line+1 <= 7 && column+1 <= 7 {
+		targetSquare := b[line+1][column+1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, p, p.Color)
 	}
@@ -124,52 +124,52 @@ func (b *Board) getQueenAttackingSquares(p *entity.Piece) []*entity.Square {
 
 func (b *Board) getKnightAttackingSquares(piece *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	y, x := piece.Square.Y, piece.Square.X
+	line, column := piece.Square.Line, piece.Square.Column
 
-	if y-2 >= 0 && x-1 >= 0 {
-		tSquare := b[y-2][x-1]
+	if line-2 >= 0 && column-1 >= 0 {
+		tSquare := b[line-2][column-1]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y-2 >= 0 && x+1 <= 7 {
-		tSquare := b[y-2][x+1]
+	if line-2 >= 0 && column+1 <= 7 {
+		tSquare := b[line-2][column+1]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y-1 >= 0 && x-2 >= 0 {
-		tSquare := b[y-1][x-2]
+	if line-1 >= 0 && column-2 >= 0 {
+		tSquare := b[line-1][column-2]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y-1 >= 0 && x+2 <= 7 {
-		tSquare := b[y-1][x+2]
+	if line-1 >= 0 && column+2 <= 7 {
+		tSquare := b[line-1][column+2]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y+1 <= 7 && x-2 >= 0 {
-		tSquare := b[y+1][x-2]
+	if line+1 <= 7 && column-2 >= 0 {
+		tSquare := b[line+1][column-2]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y+1 <= 7 && x+2 <= 7 {
-		tSquare := b[y+1][x+2]
+	if line+1 <= 7 && column+2 <= 7 {
+		tSquare := b[line+1][column+2]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y+2 <= 7 && x-1 >= 0 {
-		tSquare := b[y+2][x-1]
+	if line+2 <= 7 && column-1 >= 0 {
+		tSquare := b[line+2][column-1]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
 
-	if y+2 <= 7 && x+1 <= 7 {
-		tSquare := b[y+2][x+1]
+	if line+2 <= 7 && column+1 <= 7 {
+		tSquare := b[line+2][column+1]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 	}
@@ -179,10 +179,10 @@ func (b *Board) getKnightAttackingSquares(piece *entity.Piece) []*entity.Square 
 
 func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	y, x := piece.Square.Y, piece.Square.X
+	line, column := piece.Square.Line, piece.Square.Column
 
 	// diagonal up-left
-	for up, left := y-1, x-1; up >= 0 && left >= 0; up, left = up-1, left-1 {
+	for up, left := line-1, column-1; up >= 0 && left >= 0; up, left = up-1, left-1 {
 		tSquare := b[up][left]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -193,7 +193,7 @@ func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square 
 	}
 
 	// diagonal up-right
-	for up, right := y-1, x+1; up >= 0 && right <= 7; up, right = up-1, right+1 {
+	for up, right := line-1, column+1; up >= 0 && right <= 7; up, right = up-1, right+1 {
 		tSquare := b[up][right]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -204,7 +204,7 @@ func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square 
 	}
 
 	// diagonal down-left
-	for down, left := y+1, x-1; down <= 7 && left >= 0; down, left = down+1, left-1 {
+	for down, left := line+1, column-1; down <= 7 && left >= 0; down, left = down+1, left-1 {
 		tSquare := b[down][left]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -215,7 +215,7 @@ func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square 
 	}
 
 	// diagonal down-right
-	for down, right := y+1, x+1; down <= 7 && right <= 7; down, right = down+1, right+1 {
+	for down, right := line+1, column+1; down <= 7 && right <= 7; down, right = down+1, right+1 {
 		tSquare := b[down][right]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -230,10 +230,10 @@ func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square 
 
 func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	y, x := piece.Square.Y, piece.Square.X
+	line, x := piece.Square.Line, piece.Square.Column
 
 	// up
-	for down := y - 1; down >= 0; down-- {
+	for down := line - 1; down >= 0; down-- {
 		tSquare := b[down][x]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -244,7 +244,7 @@ func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 	}
 
 	// down
-	for up := y + 1; up <= 7; up++ {
+	for up := line + 1; up <= 7; up++ {
 		tSquare := b[up][x]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -256,22 +256,22 @@ func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 
 	// left
 	for left := x - 1; left >= 0; left-- {
-		tSquare := b[y][left]
+		tSquare := b[line][left]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 
-		if !b[y][left].IsEmpty() {
+		if !b[line][left].IsEmpty() {
 			break
 		}
 	}
 
 	// right
 	for right := x + 1; right <= 7; right++ {
-		tSquare := b[y][right]
+		tSquare := b[line][right]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 
-		if !b[y][right].IsEmpty() {
+		if !b[line][right].IsEmpty() {
 			break
 		}
 	}
@@ -281,17 +281,17 @@ func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 
 func (b *Board) getPawnAttackingSquares(piece *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	y, x := piece.Square.Y, piece.Square.X
+	line, column := piece.Square.Line, piece.Square.Column
 
 	if piece.IsWhite() {
-		if y-1 >= 0 && x-1 >= 0 {
-			targetSquare := b[y-1][x-1]
+		if line-1 >= 0 && column-1 >= 0 {
+			targetSquare := b[line-1][column-1]
 			squares = append(squares, targetSquare)
 			b.updateProtectedBy(targetSquare, piece, helper.White)
 		}
 
-		if y-1 >= 0 && x+1 <= 7 {
-			targetSquare := b[y-1][x+1]
+		if line-1 >= 0 && column+1 <= 7 {
+			targetSquare := b[line-1][column+1]
 			squares = append(squares, targetSquare)
 			b.updateProtectedBy(targetSquare, piece, helper.White)
 		}
@@ -299,14 +299,14 @@ func (b *Board) getPawnAttackingSquares(piece *entity.Piece) []*entity.Square {
 		return squares
 	}
 
-	if y+1 <= 7 && x-1 >= 0 {
-		targetSquare := b[y+1][x-1]
+	if line+1 <= 7 && column-1 >= 0 {
+		targetSquare := b[line+1][column-1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, piece, helper.Black)
 	}
 
-	if y+1 <= 7 && x+1 <= 7 {
-		targetSquare := b[y+1][x+1]
+	if line+1 <= 7 && column+1 <= 7 {
+		targetSquare := b[line+1][column+1]
 		squares = append(squares, targetSquare)
 		b.updateProtectedBy(targetSquare, piece, helper.Black)
 	}

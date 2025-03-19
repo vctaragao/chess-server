@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"fmt"
+
 	"github.com/vctaragao/chess/pkg/chess/helper"
 )
 
@@ -9,11 +11,11 @@ type Square struct {
 	Piece *Piece
 }
 
-func NewSquare(y, x int) *Square {
+func NewSquare(line, column int) *Square {
 	return &Square{
 		Position: helper.Position{
-			X: x,
-			Y: y,
+			Line:   line,
+			Column: column,
 		},
 	}
 }
@@ -28,4 +30,9 @@ func (s *Square) SetPiece(p *Piece) {
 
 func (s *Square) RemovePiece() {
 	s.Piece = nil
+}
+
+func (s *Square) String() string {
+	return fmt.Sprintf("Square: (%d, %d), Piece: %s\n", s.Line, s.Column, s.Piece)
+
 }

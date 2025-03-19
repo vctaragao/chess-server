@@ -54,6 +54,24 @@ WR  WK  WB  WQ  Wk  WB  WK  WR
 	assert.Equal(t, expectedBoard, board.Show())
 }
 
+func TestNewBoardFromStringCustom(t *testing.T) {
+	initialBoard := `
+ BR  BK  BB  __  Bk  BB  BK  BR 
+ BP  BP  BP  BP  BP  BP  BP  BP 
+ __  __  __  __  __  __  __  __ 
+ __  __  __  __  __  BQ  __  __ 
+ __  __  __  __  __  __  __  __ 
+ __  __  __  __  __  __  __  __ 
+ WP  WP  WP  WP  __  WP  WP  WP 
+ WR  WK  WB  WQ  Wk  WB  WK  WR 
+`
+
+	board, err := NewBoardFromString(initialBoard)
+	require.NoError(t, err)
+
+	assert.Equal(t, initialBoard, board.Show())
+}
+
 func TestProtectedBy(t *testing.T) {
 	board, err := NewBoard()
 	assert.NoError(t, err)

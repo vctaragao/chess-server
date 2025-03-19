@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,25 +10,30 @@ import (
 )
 
 func TestCheck(t *testing.T) {
-	_ = `
- BR  BK  BB  __  Bk  BB  BK  BR 
- BP  BP  BP  BP  BP  BP  BP  BP 
- __  __  __  __  __  __  __  __ 
- __  __  __  __  __  BQ  __  __ 
+	initialBoard := `
+ BR  BK  BB  BQ  Bk  BB  BK  BR 
+ BP  BP  BP  BP  __  BP  BP  BP 
  __  __  __  __  __  __  __  __ 
  __  __  __  __  __  __  __  __ 
- WP  WP  WP  WP  __  WP  WP  WP 
+ __  __  __  __  __  __  __  __ 
+ __  __  __  __  __  __  __  __ 
+ WP  WP  WP  WP  WP  __  WP  WP 
  WR  WK  WB  WQ  Wk  WB  WK  WR 
 `
-	game, err := game.NewGame()
+	game, err := game.NewGameWithBoard(initialBoard)
 	assert.NoError(t, err)
 
 	service := NewCheckService(game)
 
-	iSquare := game.Board[5][3]
-	tSquare := game.Board[4][3]
+	iSquare := game.Board[0][3]
+	fmt.Println("iSquare", iSquare)
 
-	movement := entity.NewMovement(iSquare, tSquare)
+	tSquare := game.Board[4][7]
+	fmt.Println("tSquare", tSquare)
 
-	service.HandleCheck(movement)
+	movement, err := entity.NewMovement(iSquare, tSquare)
+	assert.NoError(t, err)
+
+	_, isCheck := service.HandleCheck(movement)
+	assert.True(t, isCheck)
 }
