@@ -1,6 +1,9 @@
 package entity
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type (
 	Action int
@@ -78,4 +81,8 @@ func (m *Movement) IsValid() bool {
 
 func (m *Movement) IsCapture() bool {
 	return !m.TargetSquare.IsEmpty() && m.TargetSquare.Piece.Color != m.InitialSquare.Piece.Color
+}
+
+func (m *Movement) String() string {
+	return fmt.Sprintf("iSquare: %s\ntSquare: %s\n", m.InitialSquare, m.TargetSquare)
 }

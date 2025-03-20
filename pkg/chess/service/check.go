@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"slices"
 
 	"github.com/vctaragao/chess/pkg/chess/entity"
@@ -18,7 +17,9 @@ func NewCheckService(g *game.Game) *CheckService {
 }
 
 func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
-	piece := m.GetTargetPiece()
+	updatedMovementSquare := s.Game.Square(m.TargetSquare.Line, m.TargetSquare.Column)
+
+	piece := updatedMovementSquare.Piece
 
 	kColor := helper.White
 	if piece.IsWhite() {
@@ -27,9 +28,8 @@ func (s *CheckService) HandleCheck(m *entity.Movement) (*entity.Square, bool) {
 
 	// check if its a direct check
 	kingSquare := s.getKingSquare(kColor)
-	fmt.Println("kingSquare:", kingSquare)
-	fmt.Println("piece attacking squares:", piece.AttackingSquares)
 	if slices.Contains(piece.AttackingSquares, kingSquare) {
+		s.Status = game.Check
 		return kingSquare, true
 	}
 

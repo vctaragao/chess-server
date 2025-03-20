@@ -8,15 +8,6 @@ const (
 	CheckMate
 )
 
-func (s *Status) String() string {
-	switch *s {
-	case None:
-		return "None"
-	case Check:
-		return "Check"
-	case CheckMate:
-		return "CheckMate"
-	}
-
-	return ""
+func (s Status) String() string {
+	return []string{"None", "Check", "CheckMate"}[s]
 }

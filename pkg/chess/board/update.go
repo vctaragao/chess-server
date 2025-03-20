@@ -230,32 +230,32 @@ func (b *Board) getBishopAttackingSquares(piece *entity.Piece) []*entity.Square 
 
 func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 	var squares []*entity.Square
-	line, x := piece.Square.Line, piece.Square.Column
+	line, column := piece.Square.Line, piece.Square.Column
 
 	// up
 	for down := line - 1; down >= 0; down-- {
-		tSquare := b[down][x]
+		tSquare := b[down][column]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 
-		if !b[down][x].IsEmpty() {
+		if !b[down][column].IsEmpty() {
 			break
 		}
 	}
 
 	// down
 	for up := line + 1; up <= 7; up++ {
-		tSquare := b[up][x]
+		tSquare := b[up][column]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
 
-		if !b[up][x].IsEmpty() {
+		if !b[up][column].IsEmpty() {
 			break
 		}
 	}
 
 	// left
-	for left := x - 1; left >= 0; left-- {
+	for left := column - 1; left >= 0; left-- {
 		tSquare := b[line][left]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)
@@ -266,7 +266,7 @@ func (b *Board) getRookAttackingSquares(piece *entity.Piece) []*entity.Square {
 	}
 
 	// right
-	for right := x + 1; right <= 7; right++ {
+	for right := column + 1; right <= 7; right++ {
 		tSquare := b[line][right]
 		squares = append(squares, tSquare)
 		b.updateProtectedBy(tSquare, piece, piece.Color)

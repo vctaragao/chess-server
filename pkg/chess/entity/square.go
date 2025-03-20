@@ -26,6 +26,9 @@ func (s *Square) IsEmpty() bool {
 
 func (s *Square) SetPiece(p *Piece) {
 	s.Piece = p
+	if p != nil {
+		s.Piece.Square = s
+	}
 }
 
 func (s *Square) RemovePiece() {
@@ -33,6 +36,6 @@ func (s *Square) RemovePiece() {
 }
 
 func (s *Square) String() string {
-	return fmt.Sprintf("Square: (%d, %d), Piece: %s\n", s.Line, s.Column, s.Piece)
+	return fmt.Sprintf("(%d, %d), Piece: %s\n", s.Line, s.Column, s.Piece)
 
 }

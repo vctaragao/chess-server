@@ -44,5 +44,5 @@ func (p *Piece) IsProteced() bool {
 }
 
 func (p *Piece) String() string {
-	return fmt.Sprintf("Piece: %s%s", p.Color, p.PieceType)
+	return fmt.Sprintf("%s%s", p.Color, p.PieceType)
 }

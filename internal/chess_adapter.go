@@ -1,11 +1,7 @@
 package internal
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/vctaragao/chess/internal/entity"
-	"github.com/vctaragao/chess/pkg/chess"
 )
 
 const (
@@ -26,32 +22,6 @@ const (
 )
 
 type ChessAdapter struct{}
-
-func (a *ChessAdapter) NewGame() ([][]entity.Piece, error) {
-	log.Println("NewGame")
-	game, err := chess.NewGame()
-	if err != nil {
-		return game, fmt.Errorf("creating game: %w", err)
-	}
-
-	log.Println("game", game)
-
-	gameState := game.GetState()
-
-	state := make([][]entity.Piece, 8)
-	for i := range state {
-		state[i] = make([]entity.Piece, 8)
-	}
-
-	for y := 0; y < 8; y++ {
-		for x := 0; x < 8; x++ {
-			log.Println("Parsing piece", gameState.Board[y][x])
-			state[y][x] = parsePiece(gameState.Board[y][x])
-		}
-	}
-
-	return state, nil
-}
 
 func parsePiece(p string) entity.Piece {
 	switch p {

@@ -152,16 +152,8 @@ func (g *Game) changeBlackPoints(points int, op Operation) {
 	g.BPlayer.Points -= points
 }
 
-func (g *Game) GetSquare(line, column int) *entity.Square {
+func (g *Game) Square(line, column int) *entity.Square {
 	return g.Board[line][column]
-}
-
-func (g *Game) SetSquare(line, column int, square *entity.Square) {
-	if square == nil {
-		square = entity.NewSquare(line, column)
-	}
-
-	g.Board[line][column] = square
 }
 
 func (g *Game) ParseAction(action string) entity.Action {

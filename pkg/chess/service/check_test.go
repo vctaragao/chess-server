@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -26,10 +25,8 @@ func TestCheck(t *testing.T) {
 	service := NewCheckService(game)
 
 	iSquare := game.Board[0][3]
-	fmt.Println("iSquare", iSquare)
 
 	tSquare := game.Board[4][7]
-	fmt.Println("tSquare", tSquare)
 
 	movement, err := entity.NewMovement(iSquare, tSquare)
 	assert.NoError(t, err)

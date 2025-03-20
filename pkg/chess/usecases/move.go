@@ -23,8 +23,8 @@ func NewMove(g *game.Game, m *service.MovementService, c *service.CheckService, 
 }
 
 func (m *Move) Execute(iLine, iColumn, tLine, tColumn int) (err error) {
-	iSquare := m.Game.GetSquare(iLine, iColumn)
-	tSquare := m.Game.GetSquare(tLine, tColumn)
+	iSquare := m.Game.Square(iLine, iColumn)
+	tSquare := m.Game.Square(tLine, tColumn)
 
 	movement, err := entity.NewMovement(iSquare, tSquare)
 	if err != nil {
